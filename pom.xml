@@ -48,6 +48,7 @@
 
 	<modules>
 		<module>report-aggregate</module>
+		<module>services/config-service</module>
 	</modules>
 
 	<build>
@@ -66,6 +67,18 @@
 					<image>
 						<name>${dockerImageName}</name>
 					</image>
+
+					<docker>
+						<publishRegistry>
+							<url>https://index.docker.io/v1/</url>
+
+							<!--suppress UnresolvedMavenProperty -->
+							<username>${docker.publishRegistry.username}</username>
+
+							<!--suppress UnresolvedMavenProperty -->
+							<password>${docker.publishRegistry.password}</password>
+						</publishRegistry>
+					</docker>
 				</configuration>
 			</plugin>
 
