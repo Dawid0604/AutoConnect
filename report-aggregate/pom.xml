@@ -1,0 +1,53 @@
+<project>
+    <parent>
+        <groupId>pl.dawid0604</groupId>
+        <artifactId>autoconnect-root</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>report-aggregate</artifactId>
+    <packaging>pom</packaging>
+
+    <developers>
+        <developer>
+            <id>dawid0604</id>
+            <name>Dawid Sikora</name>
+            <url>https://github.com/Dawid0604</url>
+
+            <roles>
+                <role>Architect</role>
+                <role>Developer</role>
+            </roles>
+
+            <timezone>Europe/Warsaw</timezone>
+
+            <properties>
+                <github.username>dawid0604</github.username>
+            </properties>
+        </developer>
+    </developers>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <executions>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+
+    </dependencies>
+</project>
