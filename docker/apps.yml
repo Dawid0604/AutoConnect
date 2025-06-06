@@ -1,0 +1,20 @@
+name: "Application"
+
+services:
+  config-service:
+    image: dawid0604/autoconnect-config-service
+    container_name: config-service
+    ports:
+      - "8888:8888"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - autoconnect_network
+
+networks:
+  autoconnect_network:
+    driver: bridge
+    name: autoconnect_network
