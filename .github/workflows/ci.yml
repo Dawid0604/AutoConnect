@@ -102,10 +102,9 @@ jobs:
 
       - name: Build images and publish
         run: |
-          mvn clean package spring-boot:build-image -am -DskipTests \
+          mvn clean compile jib:build -am -DskipTests \
           -Ddocker.publishRegistry.username=${{ secrets.DOCKERHUB_USERNAME }} \
-          -Ddocker.publishRegistry.password=${{ secrets.DOCKERHUB_TOKEN }} \
-          -Dspring-boot.build-image.publish=true 
+          -Ddocker.publishRegistry.password=${{ secrets.DOCKERHUB_TOKEN }}
 
   release:
     needs: dockerize
