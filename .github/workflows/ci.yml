@@ -122,7 +122,7 @@ jobs:
           MODULE=$(basename "$DIR")
           
           mvn -f "$pom" clean compile jib:build -am -DskipTests \
-           -Dimage=${DOCKERHUB_USERNAME}/${MODULE}:${TAG} \
+           -Dimage=${DOCKERHUB_USERNAME}/autoconnect-${MODULE}:${TAG} \
            -Ddocker.publishRegistry.username=${DOCKERHUB_USERNAME} \
            -Ddocker.publishRegistry.password=${DOCKERHUB_TOKEN}
           done
