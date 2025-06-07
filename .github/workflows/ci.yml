@@ -81,8 +81,8 @@ jobs:
             -Dsonar.token=${SONAR_TOKEN}
 
   dockerize:
-    needs: sonar
-    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+    needs: build-and-coverage
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.base_ref == 'main' || github.base_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -100,11 +100,32 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build images and publish
+      - name: Build images and publish for all modules
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
         run: |
-          mvn clean compile jib:build -am -DskipTests \
-          -Ddocker.publishRegistry.username=${{ secrets.DOCKERHUB_USERNAME }} \
-          -Ddocker.publishRegistry.password=${{ secrets.DOCKERHUB_TOKEN }}
+          set -e
+          DATE=$(date +%Y%m%d)
+          
+          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
+            TAG="latest"
+          else 
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+            BRANCH_NAME_CLEAN=$(echo "$BRANCH_NAME" | tr '/' '-')
+            TAG="${BRANCH_NAME_CLEAN}-${DATE}-${GITHUB_SHA::7}"
+          fi
+     
+          for pom in $(find ./services -name pom.xml); do
+          DIR=$(dirname "$pom")
+          MODULE=$(basename "$DIR")
+          
+          mvn -f "$pom" clean compile jib:build -am -DskipTests \
+           -Dimage=${DOCKERHUB_USERNAME}/${MODULE}:${TAG} \
+           -Ddocker.publishRegistry.username=${DOCKERHUB_USERNAME} \
+           -Ddocker.publishRegistry.password=${DOCKERHUB_TOKEN}
+          done
 
   release:
     needs: dockerize
