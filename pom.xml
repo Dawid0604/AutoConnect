@@ -49,6 +49,7 @@
 	<modules>
 		<module>report-aggregate</module>
 		<module>services/config-service</module>
+		<module>services/discovery-service</module>
 	</modules>
 
 	<build>
