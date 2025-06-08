@@ -28,7 +28,7 @@ services:
     environment:
       - CONFIG_SERVICE_INSTANCE=config-service
     ports:
-      - "8761"
+      - "8761:8761"
     restart: unless-stopped
     depends_on:
       config-service:
@@ -39,6 +39,37 @@ services:
       timeout: 5s
       retries: 5
       start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - autoconnect_network
+
+  notification-service:
+    image: dawid0604/autoconnect-notification-service
+    container_name: notification-service
+    environment:
+      - CONFIG_SERVICE_INSTANCE=config-service
+      - DISCOVERY_SERVICE_INSTANCE=discovery-service
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_HOST=notification-mongo-db
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_USER=${NOTIFICATION_MICROSERVICE_MONGO_DB_USER}
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_PASSWORD=${NOTIFICATION_MICROSERVICE_MONGO_DB_PASSWORD}
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_PORT=${NOTIFICATION_MICROSERVICE_MONGO_DB_PORT}
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_DATABASE=${NOTIFICATION_MICROSERVICE_MONGO_DB_DATABASE}
+      - NOTIFICATION_MICROSERVICE_MONGO_DB_AUTHENTICATION_DATABASE=${NOTIFICATION_MICROSERVICE_MONGO_DB_AUTHENTICATION_DATABASE}
+      - KAFKA_SERVER=kafka
+    restart: unless-stopped
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+
+      notification-mongo-db:
+        condition: service_healthy
+
+      kafka:
+        condition: service_healthy
+
     deploy:
       resources:
         limits:

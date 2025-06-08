@@ -1,0 +1,46 @@
+name: "Dashboards"
+
+volumes:
+  autoconnect_portainer_data:
+
+services:
+  notification-mongo-db-express:
+    image: mongo-express:latest
+    container_name: autoconnect-notification-db-express
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://${NOTIFICATION_MICROSERVICE_MONGO_DB_USER}:${NOTIFICATION_MICROSERVICE_MONGO_DB_PASSWORD}@notification-mongo-db:${NOTIFICATION_MICROSERVICE_MONGO_DB_PORT}/${NOTIFICATION_MICROSERVICE_MONGO_DB_AUTHENTICATION_DATABASE}?authSource=admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${NOTIFICATION_MICROSERVICE_MONGO_EXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${NOTIFICATION_MICROSERVICE_MONGO_EXPRESS_PASSWORD}
+    ports:
+      - "48081:8081"
+    depends_on:
+      notification-mongo-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - autoconnect_network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: autoconnect-kafka-ui
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      DYNAMIC_CONFIG_ENABLED: 'true'
+
+    ports:
+      - "48083:8080"
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+      kafka:
+        condition: service_healthy
+    networks:
+      - autoconnect_network
+
+networks:
+  autoconnect_network:
+    driver: bridge
+    name: autoconnect_network
