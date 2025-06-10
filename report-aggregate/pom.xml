@@ -46,5 +46,11 @@
             <artifactId>autoconnect-notification-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>pl.dawid0604</groupId>
+            <artifactId>autoconnect-image-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
