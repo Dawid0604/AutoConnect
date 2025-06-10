@@ -5,7 +5,7 @@ volumes:
 
 services:
   notification-mongo-db-express:
-    image: mongo-express:latest
+    image: mongo-express:1.0.2-20-alpine3.19
     container_name: autoconnect-notification-db-express
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://${NOTIFICATION_MICROSERVICE_MONGO_DB_USER}:${NOTIFICATION_MICROSERVICE_MONGO_DB_PASSWORD}@notification-mongo-db:${NOTIFICATION_MICROSERVICE_MONGO_DB_PORT}/${NOTIFICATION_MICROSERVICE_MONGO_DB_AUTHENTICATION_DATABASE}?authSource=admin
