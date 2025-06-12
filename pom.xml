@@ -61,7 +61,7 @@
 				<version>3.4.5</version>
 				<configuration>
 					<from>
-						<image>dawid0604/openjdk-21-autoconnect-base:latest</image>
+						<image>dawid0604/openjdk-21-autoconnect-base@sha256:eaf1894a7fdc7bee0854eda9dfc5d93b0e074821695fc09ebbb938fcabfeec66</image>
 					</from>
 					<to>
 						<image>${dockerImageName}</image>
