@@ -50,6 +50,7 @@
 
 	<modules>
 		<module>report-aggregate</module>
+		<module>services/config-service</module>
 	</modules>
 
 	<reporting>
@@ -76,7 +77,7 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
-				<version>3.4.5</version>
+				<version>3.4.6</version>
 				<configuration>
 					<container>
 						<!--suppress UnresolvedMavenProperty -->
