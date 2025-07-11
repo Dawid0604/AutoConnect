@@ -13,7 +13,7 @@
 	<groupId>pl.dawid0604</groupId>
 	<artifactId>autoconnect-root</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Auto Connect - Root</name>
+	<name>Auto Connect</name>
 	<packaging>pom</packaging>
 
 	<developers>
