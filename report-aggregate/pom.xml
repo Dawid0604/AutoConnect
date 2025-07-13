@@ -7,7 +7,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>report-aggregate</artifactId>
-    <name>AutoConnect - JaCoCo Report Aggregate</name>
+    <name>Auto Connect - JaCoCo Report Aggregate</name>
     <packaging>pom</packaging>
 
     <build>
