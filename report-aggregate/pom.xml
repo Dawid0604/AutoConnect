@@ -45,9 +45,16 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- DISCOVERY SERVICE MODULES -->
         <dependency>
             <groupId>pl.dawid0604</groupId>
-            <artifactId>autoconnect-config-service</artifactId>
+            <artifactId>discovery-service-application</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.dawid0604</groupId>
+            <artifactId>discovery-service-configuration</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
