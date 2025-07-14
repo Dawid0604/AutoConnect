@@ -46,6 +46,7 @@
 
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<jacocoVersion>0.8.13</jacocoVersion>
+		<caffeineVersion>3.2.1</caffeineVersion>
 		<jxrPluginVersion>3.6.0</jxrPluginVersion>
 		<jibVersion>3.4.6</jibVersion>
 	</properties>
