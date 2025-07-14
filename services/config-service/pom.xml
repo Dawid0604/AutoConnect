@@ -10,7 +10,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>autoconnect-config-service</artifactId>
+	<artifactId>config-service</artifactId>
 	<name>Auto Connect - Config Service Root</name>
 	<packaging>pom</packaging>
 
