@@ -14,8 +14,6 @@
     <name>Auto Connect - Config Service Application</name>
 
     <properties>
-        <mainClass>pl.dawid0604.autoconnect.config.service.AutoConnectConfigServiceApplication</mainClass>
-
         <sonar.coverage.exclusions>
             **/AutoConnectConfigServiceApplication.java
         </sonar.coverage.exclusions>
