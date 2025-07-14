@@ -105,20 +105,15 @@ jobs:
         run: |
           set -e
           DATE=$(date +%Y%m%d)
-          
-          if [[ "${GITHUB_REF##*/}" == "main" ]]; then
-            TAG="latest"
-          else 
-            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-            BRANCH_NAME_CLEAN=$(echo "$BRANCH_NAME" | tr '/' '-')
-            TAG="${BRANCH_NAME_CLEAN}-${DATE}-${GITHUB_SHA::7}"
-          fi
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          BRANCH_NAME_CLEAN=$(echo "$BRANCH_NAME" | tr '/' '-')
+          TAG="${BRANCH_NAME_CLEAN}-${DATE}-${GITHUB_SHA::7}"
      
-          for pom in $(find ./services -name pom.xml); do
+          for pom in $(find services -mindepth 2 -maxdepth 3 -type d -name application); do
           DIR=$(dirname "$pom")
           MODULE=$(basename "$DIR")
           
-          mvn -f "$pom" clean compile jib:build -am -DskipTests \
+          mvn -pl "$pom" clean compile jib:build -am -DskipTests \
            -Dimage=${DOCKERHUB_USERNAME}/autoconnect-${MODULE}:${TAG} \
            -Ddocker.publishRegistry.username=${DOCKERHUB_USERNAME} \
            -Ddocker.publishRegistry.password=${DOCKERHUB_TOKEN}
