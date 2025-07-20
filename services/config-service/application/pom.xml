@@ -31,15 +31,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--
+            At this moment (2025-07-20) the dependency (net.i2p.crypto.eddsa) is unsolvable.
+            Source: https://www.mend.io/vulnerability-database/CVE-2020-36843
+            -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-server</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.i2p.crypto</groupId>
-                    <artifactId>eddsa</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
