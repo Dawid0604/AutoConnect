@@ -42,7 +42,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 	    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<dockerImageName>dawid0604/${project.artifactId}</dockerImageName>
+		<dockerImageName>dawid0604/autoconnect-${project.artifactId}</dockerImageName>
 
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<jacocoVersion>0.8.13</jacocoVersion>

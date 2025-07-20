@@ -2,7 +2,7 @@ name: "Microservies"
 
 services:
   config-service:
-    image: dawid0604/autoconnect-config-service
+    image: dawid0604/autoconnect-config-service-application
     container_name: config-service
     environment:
       - DISCOVERY_SERVICE_INSTANCE=discovery-service
@@ -23,7 +23,7 @@ services:
       - autoconnect_network
 
   discovery-service:
-    image: dawid0604/autoconnect-discovery-service
+    image: dawid0604/autoconnect-discovery-service-application
     container_name: discovery-service
     environment:
       - CONFIG_SERVICE_INSTANCE=config-service
