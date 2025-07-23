@@ -35,6 +35,30 @@ services:
     networks:
       - autoconnect_network
 
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: kafka-ui
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+      AUTH_TYPE: "LOGIN_FORM"
+      SPRING_SECURITY_USER_NAME: ${KAFKA_UI_USERNAME}
+      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD}
+
+    ports:
+      - "${KAFKA_UI_PORT}:8080"
+
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+
+      kafka:
+        condition: service_healthy
+
+    networks:
+      - autoconnect_network
+
 networks:
   autoconnect_network:
     driver: bridge
