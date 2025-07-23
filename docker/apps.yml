@@ -69,6 +69,36 @@ services:
       discovery-service:
         condition: service_healthy
 
+      user-service-postgres-db:
+        condition: service_healthy
+
+    networks:
+      - autoconnect_network
+
+  notification-service:
+    image: dawid0604/autoconnect-notification-service-application
+    container_name: notification-service
+    environment:
+      - CONFIG_SERVICE_INSTANCE=config-service
+      - CONFIG_SERVICE_PORT=${CONFIG_SERVICE_PORT}
+      - DISCOVERY_SERVICE_INSTANCE=discovery-service
+      - DISCOVERY_SERVICE_PORT=${DISCOVERY_SERVICE_PORT}
+      - NOTIFICATION_MICROSERVICE_DB_HOST=notification-service-postgres-db
+      - NOTIFICATION_MICROSERVICE_POSTGRES_PORT=${NOTIFICATION_MICROSERVICE_POSTGRES_PORT}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_USER=${NOTIFICATION_MICROSERVICE_POSTGRES_USER}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_PASSWORD=${NOTIFICATION_MICROSERVICE_POSTGRES_PASSWORD}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_DB=${NOTIFICATION_MICROSERVICE_POSTGRES_DB}
+    restart: unless-stopped
+    depends_on:
+      config-service:
+        condition: service_healthy
+
+      discovery-service:
+        condition: service_healthy
+
+      notification-service-postgres-db:
+        condition: service_healthy
+
     networks:
       - autoconnect_network
 
