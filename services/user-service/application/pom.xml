@@ -34,7 +34,7 @@
 
         <dependency>
             <groupId>pl.dawid0604</groupId>
-            <artifactId>user-service-persistance</artifactId>
+            <artifactId>user-service-persistence</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -42,12 +42,6 @@
             <groupId>pl.dawid0604</groupId>
             <artifactId>user-service-commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.18.0</version>
         </dependency>
     </dependencies>
 
