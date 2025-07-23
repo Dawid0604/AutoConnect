@@ -10,7 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>user-service-persistance</artifactId>
+    <artifactId>user-service-persistence</artifactId>
     <name>Auto Connect - Car Service Persistence</name>
 
     <dependencies>

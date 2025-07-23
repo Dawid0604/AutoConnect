@@ -73,7 +73,7 @@
 
         <dependency>
             <groupId>pl.dawid0604</groupId>
-            <artifactId>user-service-persistance</artifactId>
+            <artifactId>user-service-persistence</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
