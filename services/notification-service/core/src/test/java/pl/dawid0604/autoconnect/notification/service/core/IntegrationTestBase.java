@@ -8,10 +8,12 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.kafka.KafkaContainer;
 
 import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PROTECTED;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static pl.dawid0604.autoconnect.notification.service.core.IntegrationTestBase.ContainersConfig;
 
 /**
  * The base of all integration tests.
@@ -26,7 +28,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * ensure proper environment configuration.
  */
 @Getter(PROTECTED)
-@Import(IntegrationTestBase.ContainersConfig.class)
+@Import(ContainersConfig.class)
 @NoArgsConstructor(access = PACKAGE)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @SuppressWarnings({ "PMD.CommentSize", "PMD.AbstractClassWithoutAbstractMethod", "unused" })
@@ -58,6 +60,18 @@ public abstract class IntegrationTestBase {
         @SuppressWarnings("unused")
         PostgreSQLContainer<?> postgreSQLContainer() {
             return new PostgreSQLContainer<>("postgres:17-alpine");
+        }
+
+        /**
+         * Creates and configures the Apache Kafka container (Version 3.9.1) for
+         * integration tests.
+         * @return a new Kafka container instance running in the environment
+         */
+        @Bean
+        @ServiceConnection
+        @SuppressWarnings("unused")
+        KafkaContainer kafkaContainer() {
+            return new KafkaContainer("apache/kafka:3.9.1");
         }
     }
 }
