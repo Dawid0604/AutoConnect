@@ -1,0 +1,108 @@
+name: "Microservies"
+
+services:
+  config-service:
+    image: dawid0604/autoconnect-config-service-application
+    container_name: config-service
+    environment:
+      - DISCOVERY_SERVICE_INSTANCE=discovery-service
+      - CONFIG_SERVICE_PORT=${CONFIG_SERVICE_PORT}
+      - SERVER_PORT=${CONFIG_SERVICE_PORT}
+    ports:
+      - "${CONFIG_SERVICE_PORT}:${CONFIG_SERVICE_PORT}"
+    restart: unless-stopped
+
+    healthcheck:
+      test: "curl --fail --silent localhost:${CONFIG_SERVICE_PORT}/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+    networks:
+      - autoconnect_network
+
+  discovery-service:
+    image: dawid0604/autoconnect-discovery-service-application
+    container_name: discovery-service
+    environment:
+      - CONFIG_SERVICE_INSTANCE=config-service
+      - DISCOVERY_SERVICE_PORT=${DISCOVERY_SERVICE_PORT}
+      - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
+      - CONFIG_SERVICE_PORT=${CONFIG_SERVICE_PORT}
+    ports:
+      - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
+    restart: unless-stopped
+
+    depends_on:
+      config-service:
+        condition: service_healthy
+
+    healthcheck:
+      test: "curl --fail --silent localhost:${DISCOVERY_SERVICE_PORT}/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+    networks:
+      - autoconnect_network
+
+  user-service:
+    image: dawid0604/autoconnect-user-service-application
+    container_name: user-service
+    environment:
+      - CONFIG_SERVICE_INSTANCE=config-service
+      - CONFIG_SERVICE_PORT=${CONFIG_SERVICE_PORT}
+      - DISCOVERY_SERVICE_INSTANCE=discovery-service
+      - DISCOVERY_SERVICE_PORT=${DISCOVERY_SERVICE_PORT}
+      - USER_MICROSERVICE_DB_HOST=user-service-postgres-db
+      - USER_MICROSERVICE_POSTGRES_PORT=${USER_MICROSERVICE_POSTGRES_PORT}
+      - USER_MICROSERVICE_POSTGRES_USER=${USER_MICROSERVICE_POSTGRES_USER}
+      - USER_MICROSERVICE_POSTGRES_PASSWORD=${USER_MICROSERVICE_POSTGRES_PASSWORD}
+      - USER_MICROSERVICE_POSTGRES_DB=${USER_MICROSERVICE_POSTGRES_DB}
+    restart: unless-stopped
+    depends_on:
+      config-service:
+        condition: service_healthy
+
+      discovery-service:
+        condition: service_healthy
+
+      user-service-postgres-db:
+        condition: service_healthy
+
+    networks:
+      - autoconnect_network
+
+  notification-service:
+    image: dawid0604/autoconnect-notification-service-application
+    container_name: notification-service
+    environment:
+      - CONFIG_SERVICE_INSTANCE=config-service
+      - CONFIG_SERVICE_PORT=${CONFIG_SERVICE_PORT}
+      - DISCOVERY_SERVICE_INSTANCE=discovery-service
+      - DISCOVERY_SERVICE_PORT=${DISCOVERY_SERVICE_PORT}
+      - NOTIFICATION_MICROSERVICE_DB_HOST=notification-service-postgres-db
+      - NOTIFICATION_MICROSERVICE_POSTGRES_PORT=${NOTIFICATION_MICROSERVICE_POSTGRES_PORT}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_USER=${NOTIFICATION_MICROSERVICE_POSTGRES_USER}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_PASSWORD=${NOTIFICATION_MICROSERVICE_POSTGRES_PASSWORD}
+      - NOTIFICATION_MICROSERVICE_POSTGRES_DB=${NOTIFICATION_MICROSERVICE_POSTGRES_DB}
+    restart: unless-stopped
+    depends_on:
+      config-service:
+        condition: service_healthy
+
+      discovery-service:
+        condition: service_healthy
+
+      notification-service-postgres-db:
+        condition: service_healthy
+
+    networks:
+      - autoconnect_network
+
+networks:
+  autoconnect_network:
+    driver: bridge
+    name: autoconnect_network

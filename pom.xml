@@ -42,14 +42,21 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 	    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<dockerImageName>dawid0604/${project.artifactId}</dockerImageName>
+		<dockerImageName>dawid0604/autoconnect-${project.artifactId}</dockerImageName>
+
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<jacocoVersion>0.8.13</jacocoVersion>
+		<caffeineVersion>3.2.1</caffeineVersion>
 		<jxrPluginVersion>3.6.0</jxrPluginVersion>
+		<jibVersion>3.4.6</jibVersion>
 	</properties>
 
 	<modules>
 		<module>report-aggregate</module>
+		<module>services/config-service</module>
+		<module>services/discovery-service</module>
+		<module>services/user-service</module>
+		<module>services/notification-service</module>
 	</modules>
 
 	<reporting>
@@ -72,34 +79,39 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>jib-maven-plugin</artifactId>
+					<version>${jibVersion}</version>
+
+					<configuration>
+						<container>
+							<!--suppress UnresolvedMavenProperty -->
+							<mainClass>${mainClass}</mainClass>
+						</container>
+
+						<from>
+							<image>dawid0604/openjdk-21-autoconnect-base@sha256:6eb914c279b15b1111705cf829bf8f4d94a9173f00c1ab5d78c28b043dcd7b35</image>
+						</from>
+
+						<to>
+							<image>${dockerImageName}</image>
+							<auth>
+								<!--suppress UnresolvedMavenProperty -->
+								<username>${docker.publishRegistry.username}</username>
+
+								<!--suppress UnresolvedMavenProperty -->
+								<password>${docker.publishRegistry.password}</password>
+							</auth>
+						</to>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>3.4.5</version>
-				<configuration>
-					<container>
-						<!--suppress UnresolvedMavenProperty -->
-						<mainClass>${mainClass}</mainClass>
-					</container>
-
-					<from>
-						<image>dawid0604/openjdk-21-autoconnect-base@sha256:6eb914c279b15b1111705cf829bf8f4d94a9173f00c1ab5d78c28b043dcd7b35</image>
-					</from>
-					<to>
-						<image>${dockerImageName}</image>
-						<auth>
-							<!--suppress UnresolvedMavenProperty -->
-							<username>${docker.publishRegistry.username}</username>
-
-							<!--suppress UnresolvedMavenProperty -->
-							<password>${docker.publishRegistry.password}</password>
-						</auth>
-					</to>
-				</configuration>
-
-			</plugin>
-
 			<plugin>
 				<groupId>io.github.git-commit-id</groupId>
 				<artifactId>git-commit-id-maven-plugin</artifactId>
