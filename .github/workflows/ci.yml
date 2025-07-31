@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  build-and-coverage:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,60 +31,36 @@ jobs:
           name: jacoco-aggregate-report
           path: report-aggregate/target/site/jacoco-aggregate/jacoco.xml
 
-  sonar:
-    needs: build-and-coverage
-    if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
+  codeql-analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
+          languages: java
 
-      - name: Download JaCoCo aggregate report
-        uses: actions/download-artifact@v4
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  code-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          name: jacoco-aggregate-report
-
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-        run: |
-          mvn clean verify -DskipTests sonar:sonar \
-            -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-            -Dsonar.organization=${SONAR_ORGANIZATION} \
-            -Dsonar.host.url=${SONAR_HOST_URL} \
-            -Dsonar.token=${SONAR_TOKEN} \
-            -Dsonar.scanner.skipJREProvisioning=true \
-            -Dsonar.github.pullRequest=false
+          file: report-aggregate/target/site/jacoco-aggregate/jacoco.xml
+          fail_ci_if_error: true
 
   dockerize:
-    needs: build-and-coverage
+    needs: [ build, codeql-analysis, code-coverage ]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
