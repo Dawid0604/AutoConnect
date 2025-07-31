@@ -80,9 +80,8 @@ jobs:
             -Dsonar.organization=${SONAR_ORGANIZATION} \
             -Dsonar.host.url=${SONAR_HOST_URL} \
             -Dsonar.token=${SONAR_TOKEN} \
-            -Dsonar.pullrequest.provider=github \
-            -Dsonar.pullrequest.github.endpoint=https://api.github.com/ \
-            -Dsonar.scm.disabled=true 
+            -Dsonar.scanner.skipJREProvisioning=true \
+            -Dsonar.github.pullRequest=false
 
   dockerize:
     needs: build-and-coverage
