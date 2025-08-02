@@ -1,4 +1,4 @@
-name: Coverage, SonarQube, Dockerize
+name: Build, Coverage, CodeQL, Dockerize
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
+          distribution: temurin
+          cache: maven
 
       - name: Build, test and aggregate coverage (fail if coverage < 80%)
         run: mvn clean verify
@@ -61,6 +61,12 @@ jobs:
     needs: [ build, codeql-analysis ]
     runs-on: ubuntu-latest
     steps:
+      - name: Download JaCoCo aggregate report
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-aggregate-report
+          path: .
+
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -78,8 +84,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
+          distribution: temurin
+          cache: maven
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
