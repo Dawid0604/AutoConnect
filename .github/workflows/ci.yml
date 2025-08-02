@@ -50,9 +50,10 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
+          build-mode: manual
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      - name: Build project
+        run: mvn clean verify -DskipTests
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
