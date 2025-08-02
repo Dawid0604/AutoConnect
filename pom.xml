@@ -41,14 +41,26 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-	    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/report-aggregate/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<dockerImageName>dawid0604/autoconnect-${project.artifactId}</dockerImageName>
 
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
-		<jacocoVersion>0.8.13</jacocoVersion>
-		<caffeineVersion>3.2.1</caffeineVersion>
-		<jxrPluginVersion>3.6.0</jxrPluginVersion>
-		<jibVersion>3.4.6</jibVersion>
+		<jacoco.version>0.8.13</jacoco.version>
+		<caffeine.version>3.2.1</caffeine.version>
+		<jxrPlugin.version>3.6.0</jxrPlugin.version>
+		<jib.version>3.4.6</jib.version>
+		<jdepend.version>2.1</jdepend.version>
+		<archunit.version>1.4.1</archunit.version>
+		<spotbugsPlugin.version>4.9.3.0</spotbugsPlugin.version>
+		<spotbugs.version>4.9.3</spotbugs.version>
+		<maven.enforcer.version>3.6.1</maven.enforcer.version>
+		<checkerframework.version>3.49.5</checkerframework.version>
+		<commons-lang3-version>3.18.0</commons-lang3-version>
+		<guava.version>33.4.8-jre</guava.version>
+		<errorProne.version>2.38.0</errorProne.version>
+		<apache.httpclient.version>4.5.14</apache.httpclient.version>
+		<hk2.api.version>3.1.1</hk2.api.version>
+		<xtream.version>1.4.21</xtream.version>
+		<apache.commons-compress.version>1.27.1</apache.commons-compress.version>
 	</properties>
 
 	<modules>
@@ -64,19 +76,87 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>${jxrPluginVersion}</version>
+				<version>${jxrPlugin.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.github.spotbugs</groupId>
-			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.9.3</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-compress</artifactId>
+				<version>${apache.commons-compress.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.tngtech.archunit</groupId>
+				<artifactId>archunit-junit5</artifactId>
+				<version>${archunit.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-annotations</artifactId>
+				<version>${spotbugs.version}</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.errorprone</groupId>
+				<artifactId>error_prone_annotations</artifactId>
+				<version>${errorProne.version}</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.hk2</groupId>
+				<artifactId>hk2-api</artifactId>
+				<version>${hk2.api.version}</version>
+				<scope>compile</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${apache.httpclient.version}</version>
+
+				<exclusions>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>${xtream.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
@@ -84,7 +164,7 @@
 				<plugin>
 					<groupId>com.google.cloud.tools</groupId>
 					<artifactId>jib-maven-plugin</artifactId>
-					<version>${jibVersion}</version>
+					<version>${jib.version}</version>
 
 					<configuration>
 						<container>
@@ -160,15 +240,60 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-			    <version>5.1.0.4751</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>${jdepend.version}</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.14.0</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<release>${java.version}</release>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>${maven.enforcer.version}</version>
+
+				<executions>
+					<execution>
+						<id>enforce-rules</id>
+
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>${java.version}</version>
+								</requireJavaVersion>
+								<dependencyConvergence/>
+								<requireUpperBoundDeps/>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
     	  		<groupId>org.jacoco</groupId>
     	  		<artifactId>jacoco-maven-plugin</artifactId>
-    	  		<version>${jacocoVersion}</version>
+    	  		<version>${jacoco.version}</version>
     	  		<executions>
     	  		  <execution>
     	  		    <id>prepare-agent</id>
@@ -212,7 +337,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
-				<version>${jxrPluginVersion}</version>
+				<version>${jxrPlugin.version}</version>
 			</plugin>
 
 			<plugin>
@@ -239,7 +364,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.9.3.0</version>
+				<version>${spotbugsPlugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -250,16 +375,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 </project>

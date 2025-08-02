@@ -13,12 +13,6 @@
     <artifactId>user-service-application</artifactId>
     <name>Auto Connect - User Service Application</name>
 
-    <properties>
-        <sonar.coverage.exclusions>
-            **/AutoConnectUserServiceApplication.java
-        </sonar.coverage.exclusions>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>pl.dawid0604</groupId>
@@ -86,7 +80,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>${jibVersion}</version>
+                <version>${jib.version}</version>
             </plugin>
         </plugins>
     </build>

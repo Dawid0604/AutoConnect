@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>${caffeineVersion}</version>
+            <version>${caffeine.version}</version>
         </dependency>
 
         <dependency>
@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>${jibVersion}</version>
+                <version>${jib.version}</version>
 
                 <configuration>
                     <skip>true</skip>

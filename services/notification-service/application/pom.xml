@@ -13,12 +13,6 @@
     <artifactId>notification-service-application</artifactId>
     <name>Auto Connect - Notification Service Application</name>
 
-    <properties>
-        <sonar.coverage.exclusions>
-            **/AutoConnectNotificationServiceApplication.java
-        </sonar.coverage.exclusions>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>pl.dawid0604</groupId>
@@ -92,7 +86,7 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>${jibVersion}</version>
+                <version>${jib.version}</version>
             </plugin>
         </plugins>
     </build>
